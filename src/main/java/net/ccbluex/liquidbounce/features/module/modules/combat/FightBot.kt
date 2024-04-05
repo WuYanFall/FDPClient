@@ -307,12 +307,16 @@ class FightBot : Module() {
         return floatArrayOf(yaw, pitch)
     }
 
-    private fun strafeWithYaw(speed: Double, yaw: FloatArray) {
+ private fun strafeWithYaw(speed: Double, yaw: FloatArray) {
         if(silentValue.get()) {
             mc.thePlayer.isSprinting = true
             if (mc.thePlayer.onGround) {
                 if (mc.gameSettings.keyBindForward.pressed) mc.gameSettings.keyBindForward.pressed = false
-                RotationUtils.setTargetRotation(Rotation(yaw[0], yaw[1]), 10)
+                // 在这里加上一个判断条件，检查玩家是否在地面上
+                if (mc.thePlayer.onGround) {
+                    // 只有在地面上才会调用这个函数，调整玩家视角
+                    RotationUtils.setTargetRotation(Rotation(yaw[0], yaw[1]), 10)
+                }
                 val strafe = mc.thePlayer.movementInput.moveStrafe.toDouble()
                 val cos = cos(Math.toRadians((yaw[0] + 90.0f).toDouble()))
                 val sin = sin(Math.toRadians((yaw[0] + 90.0f).toDouble()))
